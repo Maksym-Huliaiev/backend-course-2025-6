@@ -223,6 +223,44 @@ app.post('/register', upload.single('photo'), async (req, res) => {
     res.status(201).send('Device registered successfully');
 });
 
+app.post('/search', (req, res) => {
+    const { id, includePhoto } = req.body;
+
+    if (!id) {
+        return res.status(400).send('Bad Request: id is required');
+    }
+
+    const item = inventory.find(i => i.id === id);
+
+    if (!item) {
+        return res.status(404).send('Not found');
+    }
+
+    const result = {
+        id: item.id,
+        inventory_name: item.inventory_name,
+        description: item.description
+    };
+
+    if (includePhoto === 'on' && item.photo) {
+        result.photo = `http://${opts.host}:${opts.port}/inventory/${item.id}/photo`;
+    }
+
+    res.json(result);
+});
+
+app.get('/RegisterForm.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'RegisterForm.html'));
+});
+
+app.get('/SearchForm.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'SearchForm.html'));
+});
+
+app.use((req, res, next) => {
+    return res.status(405).send('Method Not Allowed');
+});
+
 app.get('/', (req, res) => {
     res.send("Hello, World!\n");
 });
