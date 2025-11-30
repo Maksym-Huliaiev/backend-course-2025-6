@@ -28,7 +28,17 @@ const uploadDir = path.join(opts.cache, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
-const upload = multer({ dest: uploadDir });
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage });
 
 const inventoryPath = path.join(opts.cache, 'inventory.json');
 let inventory = [];
@@ -41,6 +51,23 @@ try {
 } catch (err) {
     console.error('Error reading inventory.json:', err);
 }
+
+app.use('/uploads', express.static(uploadDir));
+
+app.get('/inventory', (req, res) => {
+    const inventoryWithUrls = inventory.map(item => {
+        let photoUrl = null;
+        if (item.photo) {
+            const filename = path.basename(item.photo);
+            photoUrl = `http://${opts.host}:${opts.port}/uploads/${filename}`;
+        }
+        return {
+            ...item,
+            photo: photoUrl
+        };
+    });
+    res.json(inventoryWithUrls);
+});
 
 app.post('/register', upload.single('photo'), async (req, res) => {
     const { inventory_name, description } = req.body;
