@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "da47c9c5-8358-439f-8507-01dbef031c12",
+		"name": "web_nss_6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48687889",
+		"_collection_link": "https://maxim-gulyayev-9767245.postman.co/workspace/Max-Gulyayev's-Workspace~ecb56787-6c53-41a5-8c08-f3a34d88db76/collection/48687889-da47c9c5-8358-439f-8507-01dbef031c12?action=share&source=collection_link&creator=48687889"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "inventory_name",
+							"value": "cat44",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "my cat444",
+							"type": "text"
+						},
+						{
+							"key": "photo",
+							"type": "file",
+							"src": "/C:/Users/maxgu/OneDrive/Pictures/Camera Roll/gaz24.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/inventory",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/inventory/1764520365772",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory",
+						"1764520365772"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory/:id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"inventory_name\": \"cat\",\r\n    \"description\": \"kotusyk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/inventory/1764520365772",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory",
+						"1764520365772"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"kotusyk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/inventory/1764517531860",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory",
+						"1764517531860"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory/:id/photo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/inventory/1764517531860/photo",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory",
+						"1764517531860",
+						"photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/inventory/:id/photo",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "photo",
+							"type": "file",
+							"src": "/C:/Users/maxgu/OneDrive/Pictures/Camera Roll/котусик.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/inventory/1764517531860/photo",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory",
+						"1764517531860",
+						"photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "1764520365772",
+							"type": "text"
+						},
+						{
+							"key": "includePhoto",
+							"value": "on",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/search",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"search"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
