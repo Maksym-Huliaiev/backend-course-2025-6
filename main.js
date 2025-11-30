@@ -89,6 +89,33 @@ app.get('/inventory/:id', (req, res) => {
     });
 });
 
+app.put('/inventory/:id', async (req, res) => {
+    const { id } = req.params;
+    const { inventory_name, description } = req.body;
+
+    const itemIndex = inventory.findIndex(i => i.id === id);
+
+    if (itemIndex === -1) {
+        return res.status(404).send('Not found');
+    }
+
+    if (inventory_name !== undefined) {
+        inventory[itemIndex].inventory_name = inventory_name;
+    }
+    if (description !== undefined) {
+        inventory[itemIndex].description = description;
+    }
+
+    try {
+        await fs.promises.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+    } catch (err) {
+        console.error('Error writing inventory.json:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+
+    res.json(inventory[itemIndex]);
+});
+
 app.post('/register', upload.single('photo'), async (req, res) => {
     const { inventory_name, description } = req.body;
 
