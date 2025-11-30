@@ -69,6 +69,26 @@ app.get('/inventory', (req, res) => {
     res.json(inventoryWithUrls);
 });
 
+app.get('/inventory/:id', (req, res) => {
+    const { id } = req.params;
+    const item = inventory.find(i => i.id === id);
+
+    if (!item) {
+        return res.status(404).send('Not found');
+    }
+
+    let photoUrl = null;
+    if (item.photo) {
+        const filename = path.basename(item.photo);
+        photoUrl = `http://${opts.host}:${opts.port}/uploads/${filename}`;
+    }
+
+    res.json({
+        ...item,
+        photo: photoUrl
+    });
+});
+
 app.post('/register', upload.single('photo'), async (req, res) => {
     const { inventory_name, description } = req.body;
 
