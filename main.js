@@ -52,14 +52,12 @@ try {
     console.error('Error reading inventory.json:', err);
 }
 
-app.use('/uploads', express.static(uploadDir));
-
 app.get('/inventory', (req, res) => {
     const inventoryWithUrls = inventory.map(item => {
         let photoUrl = null;
         if (item.photo) {
             const filename = path.basename(item.photo);
-            photoUrl = `http://${opts.host}:${opts.port}/uploads/${filename}`;
+            photoUrl = `http://${opts.host}:${opts.port}/inventory/${item.id}/photo`;
         }
         return {
             ...item,
@@ -80,13 +78,33 @@ app.get('/inventory/:id', (req, res) => {
     let photoUrl = null;
     if (item.photo) {
         const filename = path.basename(item.photo);
-        photoUrl = `http://${opts.host}:${opts.port}/uploads/${filename}`;
+        photoUrl = `http://${opts.host}:${opts.port}/inventory/${item.id}/photo`;
     }
 
     res.json({
         ...item,
         photo: photoUrl
     });
+});
+
+app.get('/inventory/:id/photo', (req, res) => {
+    const { id } = req.params;
+    const item = inventory.find(i => i.id === id);
+
+    if (!item) {
+        return res.status(404).send('Not found');
+    }
+
+    if (!item.photo) {
+        return res.status(404).send('Not found');
+    }
+
+    if (!fs.existsSync(item.photo)) {
+        return res.status(404).send('Not found');
+    }
+
+    res.header('Content-Type', 'image/jpeg');
+    res.sendFile(path.resolve(item.photo));
 });
 
 app.put('/inventory/:id', async (req, res) => {
