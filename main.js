@@ -169,6 +169,34 @@ app.put('/inventory/:id', async (req, res) => {
     res.json(inventory[itemIndex]);
 });
 
+app.delete('/inventory/:id', async (req, res) => {
+    const { id } = req.params;
+    const itemIndex = inventory.findIndex(i => i.id === id);
+
+    if (itemIndex === -1) {
+        return res.status(404).send('Not found');
+    }
+
+    if (inventory[itemIndex].photo && fs.existsSync(inventory[itemIndex].photo)) {
+        try {
+            await fs.promises.unlink(inventory[itemIndex].photo);
+        } catch (err) {
+            console.error('Error deleting photo:', err);
+        }
+    }
+
+    inventory.splice(itemIndex, 1);
+
+    try {
+        await fs.promises.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+    } catch (err) {
+        console.error('Error writing inventory.json:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+
+    res.status(200).send();
+});
+
 app.post('/register', upload.single('photo'), async (req, res) => {
     const { inventory_name, description } = req.body;
 
