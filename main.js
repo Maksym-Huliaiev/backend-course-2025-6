@@ -107,6 +107,41 @@ app.get('/inventory/:id/photo', (req, res) => {
     res.sendFile(path.resolve(item.photo));
 });
 
+app.put('/inventory/:id/photo', upload.single('photo'), async (req, res) => {
+    const { id } = req.params;
+    const itemIndex = inventory.findIndex(i => i.id === id);
+
+    if (itemIndex === -1) {
+        return res.status(404).send('Not found');
+    }
+
+    if (!req.file) {
+        return res.status(400).send('Bad Request: photo is required');
+    }
+
+    if (inventory[itemIndex].photo && fs.existsSync(inventory[itemIndex].photo)) {
+        try {
+            await fs.promises.unlink(inventory[itemIndex].photo);
+        } catch (err) {
+            console.error('Error deleting old photo:', err);
+        }
+    }
+
+    inventory[itemIndex].photo = req.file.path;
+
+    try {
+        await fs.promises.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+    } catch (err) {
+        console.error('Error writing inventory.json:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+
+    res.json({
+        ...inventory[itemIndex],
+        photo: `http://${opts.host}:${opts.port}/inventory/${id}/photo`
+    });
+});
+
 app.put('/inventory/:id', async (req, res) => {
     const { id } = req.params;
     const { inventory_name, description } = req.body;
